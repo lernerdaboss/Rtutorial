@@ -1,0 +1,34 @@
+#ASSESSING MODEL FIT
+ggplot(data = textbooks, aes(x = amazNew, y = uclaNew))+
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+#fits well
+ggplot(data = possum, aes(x=tailL, y = totalL))+
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+#sums of squared deviations "ln" SSE
+
+mod_possum <- lm(totalL ~ tailL, data = possum)
+mod_possum %>%
+  augment()%>%
+  summarize(SSE = sum(.resid^2),
+            SSE_also = (n() - 1) * var(.resid))
+
+#ROOT MEAN SQUARED ERROR RMSE - std of residuals
+RMSE <- sqrt(sum(residuals(mod)^2) / df.residual(mod))
+
+
+#COMPARING MODEL FITS
+#Calculating R^2 - how close data is fitted to regression line
+#R_squared = 1 - var_e / var_y
+#in summary function
+bdims_tidy <- augment(mod)
+bdims_tidy %>%
+  summarize(var_y = var(uclaNew), var_e =var(.resid)) %>%
+  mutate(R_squares = 1 - var_e / var_y)
+
+
+#Removing outliers
+new_dataframe <- with_outlier %>%
+  filter(!(x > 60 & y < 30))
