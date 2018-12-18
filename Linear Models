@@ -1,0 +1,54 @@
+#Linear Models
+#Least square to find best fit line
+#ggplot(data, aes(y, x))+
+  #geom_point() + geom_smooth(method="lm, se=FALSE)
+ggplot(bdims, aes(x=wgt, y=hgt))+
+  geom_point()+
+  geom_smooth(method="lm", se =)
+
+#residuals are realisation of noise term
+#given n observations, minimise sum of the squared distances
+
+bdims_summary <- summary(bdims)
+bdims_summary <- data.frame(bdims_summary)
+# Add slope and intercept
+sd_wgt <- sd(bdims$wgt)
+sd_hgt <- sd(bdims$hgt)
+mean_wgt <- mean(bdims$wgt)
+mean_hgt <- mean(bdims$hgt)
+bdims %>%
+  mutate(slope = cor(wgt, hgt) * sd_wgt / sd_hgt, 
+         intercept = mean_wgt - slope * mean_hgt)
+
+mod <- (lm(uclaNew ~ amazNew, data = textbooks))
+lm(bdims$wgt ~ bdims$hgt)
+
+textbooks %>%
+  mutate(amazNew_cents = amazNew*100) %>%
+  lm(uclaNew ~ amazNew_cents, data = .)
+
+# Add the line to the scatterplot
+ggplot(data = bdims, aes(x = hgt, y = wgt)) + 
+  geom_point() + 
+  geom_abline(data = coefs, 
+              aes(intercept = `(Intercept)`, slope = hgt),  
+              color = "dodgerblue")
+summary(mod)
+fitted.values(mod)
+residuals(mod)
+
+library(broom)
+augment(mod)
+
+
+#MAKING PREDICTIONS LINEAR MODEL
+augment(mod) %>%
+  arrange(desc(.resid)) %>%
+  head()
+
+textbooks %>%
+  filter(uclaNew == 197)
+
+#predict(lm, newdata (a dataframe))
+new_data <- data.frame(textbooks$amazNew)
+predict(mod, newdata = new_data)
