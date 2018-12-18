@@ -1,0 +1,74 @@
+#Chapter2
+#tidyr package
+#gather(df, my_key, my_val, -Column)
+#spread(df, my_ky, my_val)
+#separate(df, col, into ie:c("year", "month"), sep = "-")
+#unite(df, col ie:newname, col1, col2, sep = "-")
+
+#Chapter3
+#character: "12314"
+#numerics: 233, NaN, Inf
+#intefer: 4L, 422L
+#factor: factor("hey"), factor(8) ----- Categorical data
+#logical: TRUE, FALSE, NA
+#class(variable)
+
+#Type conversions: as.character(2016), as.numeric(TRUE) = 1, as.factor("something") = something
+
+#DATETIME --- LUBRIDATE package
+library(lubridate)
+ymd("2015-08-25")
+ymd("2015 August 25")
+#="2015-08-25"
+#ALSO mdy, hms, ymd_hms
+
+#STRING MANIPULATIONS
+library(stringr)
+str_trim("   this is a test    ")
+#="this is a test"
+str_pad("25453", width = 10, side="left", pad="0")
+#=0000025453
+friends <- c("Sarah", "alice", "peter")
+str_detect(friends, "Sarah")
+str_replace(friends, "Sarah", "Alex")
+
+
+
+#Missing and Special Values
+#Finding missing values
+df <- data.frame(A=c(22, NA, 3),
+                 B=c(NA, 3, 91),
+                 C=c(2,33, 34),
+                 D=c(44, 1, 13))
+is.na(df)
+any(is.na(df))
+sum(is.na(df))
+#=2
+summary(df)
+complete.cases(df)
+
+#keeping rows with no missing values:
+df[complete.cases(df),]
+#another way remove rows with NAs
+na.omit(df)
+#which(is.na(data))
+
+
+
+#Spotting outliers and common errors
+set.seed(10)
+x <- c(rnorm(50, mean=15,sd=5), -55, 200, 55, 0)
+boxplot(x, horizontal = TRUE)
+#removing obvious errors
+
+
+
+#Putting it all together
+
+
+
+#tidying weather data
+weather1 <- gather(weather, measure, my_val, X1:X31, na.rm = TRUE)
+#removing first column
+without_X <- weather1[, -1]
+weather3 <- spread(without_X, measure, my_val)
